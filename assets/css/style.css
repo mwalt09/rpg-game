@@ -2,4 +2,143 @@ html {
 	background-image: url("../images/topGunBG.jpg");
 	background-repeat: no-repeat;
 	background-size: cover; 
+	box-sizing: border-box;
 }
+
+body {
+	box-sizing: border-box;
+	margin: 0 auto;
+	line-height: 1.5;
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+h3 {
+	text-transform: uppercase;
+}
+
+img {
+	border: 4px solid black;
+	/*position: absolute;*/
+}
+
+#attack {
+	position: absolute;
+	font-family: futura;
+	font-size: 20px;
+	top: 450px;
+	left: 670px;
+	height: 40px;
+	width: 100px;
+	background-color: red;
+	color: #D0D3D4;
+	border-color: black;
+	border-radius: 5px;
+}
+
+#message {
+	position: absolute;
+	height: 150px;
+	width: 600px;
+	top: 275px;
+	left: 405px;
+	font-family: futura;
+	font-size: 30px;
+	font-weight: 600;
+	text-align: center;
+	color: #39FF14;
+	text-shadow: 1px 1px black;
+}
+
+#instructions {
+	font-family: futura, sans-serif;
+	font-size: 40px;
+	font-weight: 700;
+	text-shadow: 2px 1px black/*#7B7D7D*/;
+	color: #D0D3D4;
+	text-align: center;
+	position: relative;
+	top: 570px;
+}
+
+.container #characters {
+	position: relative;
+	padding-left: 222px;
+	top: 270px;
+}
+
+.character-image {
+	/*position: relative;*/ /* test */
+	display: inline-block;
+	margin: 20px;
+	cursor: pointer;
+	color: red;
+	letter-spacing: 0.2em;
+	top: 200px;
+}
+
+.selected img {
+	border: 2px solid #39FF14;
+	box-shadow: 0 0 42px #39FF14;
+	cursor: default;
+}
+
+.enemy img {
+	border: 2px solid #DD0048;
+	box-shadow: 0 0 42px #DD0048;
+	cursor: default;
+	/*position: absolute;*/
+}
+
+#enemy {
+	display: inline-block;
+	/*float: right;*/
+	position: absolute;
+	left: 1043px;
+	top: 253px;
+}
+
+#yourPlayer {
+	display: inline-block;
+	position: absolute;
+	top: 253px;
+	left: 130px;
+}
+
+.character-image h3 {
+	font-family: futura, sans-serif;
+	font-size: 20px;
+	text-transform: uppercase;
+	text-align: center;
+	text-shadow: 1px 2px gray;
+	font-weight: 600;
+	position: absolute;
+	width: 200px;
+	top: 180px;
+}
+
+.character-image h4 {
+	font-family: futura, sans-serif;
+	font-size: 18px;
+	text-transform: uppercase;
+	text-shadow: 1px 2px gray;
+	font-weight: 600;
+	position: absolute;
+	width: 200px;
+	top: 200px;
+	text-align: center;
+}
+
+.character-image .enemy {
+	position: absolute;
+	left: 700px;
+}
+
+#fightArena {
+	position: relative;
+}
+
+#chooseCharacters {
+	position: relative;
+}
+
