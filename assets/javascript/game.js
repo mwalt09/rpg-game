@@ -21,6 +21,7 @@ $(document).ready(function() {
 			"name": "maverick",
 			"health": 130,
 			"attack": 13,
+			"power": 13,
 			"counter": 12,
 			"image": "./assets/images/maverick.jpeg"
 		},
@@ -30,6 +31,7 @@ $(document).ready(function() {
 			"name": "goose",
 			"health": 100,
 			"attack": 7,
+			"power": 7,
 			"counter": 9,
 			"image": "./assets/images/goose.jpg"
 		},
@@ -39,6 +41,7 @@ $(document).ready(function() {
 			"name": "iceman",
 			"health": 150,
 			"attack": 10,
+			"power": 10,
 			"counter": 14,
 			"image": "./assets/images/iceman.jpg"
 		},
@@ -48,6 +51,7 @@ $(document).ready(function() {
 			"name": "merlin",
 			"health": 120,
 			"attack": 9,
+			"power": 9,
 			"counter": 9,
 			"image": "./assets/images/merlin.jpg"
 		}
@@ -73,7 +77,7 @@ $(document).ready(function() {
 			characters.append(image);
 			characters.append(health);
 			$("#characters").append(characters);
-			console.log(health);
+			// console.log(health);
 		}
 	}
 	renderCharacters();
@@ -132,24 +136,31 @@ $(document).ready(function() {
 	$("#attackButton").on("click", function() {
 		console.log("PLAYER HEALTH: " + userCharacter.health);
 		console.log("PLAYER DAMAGE: " + userCharacter.attack);
-		console.log("Opponent Health: " + enemyCharacter.health);
-		console.log("Opponent Damage: " + enemyCharacter.attack);
-		enemyCharacter.health = enemyCharacter.health - userCharacter.attack;
-		userCharacter.health = userCharacter.health - enemyCharacter.attack;
+		enemyCharacter.health -= userCharacter.attack;
+		console.log("Opponent Health After Attack: " + enemyCharacter.health);
+		
+		userCharacter.health -= enemyCharacter.counter;
+		console.log("Enemy Counter Attack " + enemyCharacter.counter);
+		console.log("PLAYER HEALTH AFTER COUNTER " + userCharacter.health);
+
+		userCharacter.attack += userCharacter.power;
+
 		if (userCharacter.health > 0) {
-			$(".userCharacter .health").html(userCharacter.health + " HP");
+			$(".selected>h4").html(userCharacter.health + " HP");
 		} else {
-			$(".userCharacter .health").text("DEFEATED");
+			$(".selected>h4").text("DEFEATED");
+			$("#attack").addClass("disabled");
 		}
 		if (enemyCharacter.health > 0) {
-			$(".enemyCharacter .health").html(enemyCharacter.health + " HP");
+			$(".enemy>h4").html(enemyCharacter.health + " HP");
 		} else {
-			$(".enemyCharacter .health").text("DEFEATED");
+			$(".enemy>h4").text("DEFEATED");
+			$("#attack").addClass("disabled");
 		}
 		$("#message").html("You attacked for " + userCharacter.attack + " damage.<br>");
-		$("#message").append(enemyCharacter.name + " attacked for " + enemyCharacter.attack + " damage.");
+		$("#message").append(enemyCharacter.name + " attacked for " + enemyCharacter.counter + " damage.");
 		
-		// enemy.health -= userCharacter.attack
+		
 	})
 
 
