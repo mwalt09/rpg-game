@@ -11,6 +11,8 @@ $(document).ready(function() {
 	//Four states: choosePlayer, chooseOpponent, attack, gameOver
 	var gameState = "choosePlayer";
 	var availableEnemies = [];
+	var playerId;
+	var defenderId;
 
 	//Characters
 	//=================================================
@@ -57,9 +59,6 @@ $(document).ready(function() {
 		}
 	];
 
-	var haveCharacter = false;
-	var haveAttacker = false;
-
 
 	//Functions
 	//================================================
@@ -70,97 +69,146 @@ $(document).ready(function() {
 			var image = "<img src='"+playableCharacters[i].image+"'>";
 			var name = "<h3>"+playableCharacters[i].name+"</h3>";
 			var health = "<h4 class='hp'>"+playableCharacters[i].health+" HP</h4>";
-			characters.addClass("character-image selectable");
+			characters.addClass("you");
 			characters.attr("id", i);
 			characters.attr("hp", playableCharacters[i].health);
 			characters.html(name);
 			characters.append(image);
 			characters.append(health);
 			$("#characters").append(characters);
-			// console.log(health);
 		}
 	}
 	renderCharacters();
 
+	function checkIfPlayerLost() {
+		if (playableCharacters[playerId].health <= 0) {
+			chooseYourPlayer = 0;
+			enemyCharacterChoice = 0;
+			wins = 0;
+			alert("You've been killed in action.");
+			renderCharacters();
+			// $("#yourPlayer").empty();
+			// $("#yourPlayer").append("<div id='yourPlayer'></div>");
+			// $("#characters").empty();
+			// $("#characters").
+		}
+	}
 
+	function checkIfPlayerWon() {
+		if (playableCharacters[defenderId].health <= 0) {
+			enemyCharacterChoice = 0;
+			wins++;
+			alert("You beat " + playableCharacters[defenderId].name + "!");
+			$("#yourPlayer").hide();
+			$(".currentDefender").remove();
+			$("#message").html("");
+			$("#characters").append(futureEnemies);
+			$("#instructions").html("Choose an Opponent");
+		}
+		if (wins === 3) {
+			$("#instructions").html("");
+			alert("YOU WON!");
+
+		}
+	}
 	
 	$("#attackButton").css("visibility", "hidden");
 
 	// console.log(characters);
-	
+	// var heroSelectedCounter = 
 	//Pick your character
-	function selectCharacters(char) {
-		
-	// $(".selectable").on("click.player", function() {
-	if (!haveCharacter) {
-		$(char).removeClass("selectable");
-		$(char).addClass("selected");
-		haveCharacter = true;
-		var pId = $(char).attr("id");
-		userHealth = $(char).attr("hp");
-		userCharacter = "";
-		userCharacter = playableCharacters[pId];
-		console.log(userCharacter.health);
-		$("#instructions").html("Choose an Opponent");
-		// $(char).unbind().("disable player");
-		// $(".character-image").off("click.player");
-	}
-	else if (!haveAttacker) {
-		$(char).removeClass("selectable");
-		$(char).addClass("enemy");
-		$(".selectable").addClass("notSelected");
-		$(".selectable").removeClass("selectable");
-		$(".notSelected").hide();
-		$("#characters").hide();
-		// Move the characters to chooseCharacters div
-		$(".enemy").clone().appendTo($("#enemy"));
-		$(".selected").clone().appendTo($("#yourPlayer"));
-		haveAttacker = true;
-		enemyCharacter = "";
-		var aId = $(char).attr("id");
-		userHealth = $(char).attr("hp");
-		enemyCharacter = playableCharacters[aId];
-		console.log(enemyCharacter.attack);
-		$(char).off("click.player");
-		$("#selectable").off("click.player");
-		$("#attackButton").css("visibility", "visible");
-		$("#instructions").html("Click Fire to Engage");
-	}
-	}
-	
-	$(".selectable").unbind("click").bind("click", function() {
-		selectCharacters(this);
-		$(this).unbind("click");
+	// function selectCharacters(char) {
+	$("#instructions").html("Choose a Character");
+
+	var chooseYourPlayer = 0;
+	var player;
+
+	$("body").on("click", ".you", function(event) {
+		if (chooseYourPlayer === 0) {
+			playerId = $(this).attr("id");
+			$(this).addClass("good");
+			$(this).removeClass("you");
+			$(this).siblings("div").addClass("evil");
+			$(this).siblings("div").removeClass("you");
+			player = $(this).detach();
+			userHealth = $(this).attr("hp");
+			userCharacter = "";
+			userCharacter = playableCharacters[playerId];
+			$("#instructions").html("Choose an Opponent");
+			chooseYourPlayer++;	
+			// console.log(playerId);
+			// console.log(userCharacter);
+		}
 	})
 
-	$("#attackButton").on("click", function() {
-		console.log("PLAYER HEALTH: " + userCharacter.health);
-		console.log("PLAYER DAMAGE: " + userCharacter.attack);
-		enemyCharacter.health -= userCharacter.attack;
-		console.log("Opponent Health After Attack: " + enemyCharacter.health);
-		
-		userCharacter.health -= enemyCharacter.counter;
-		console.log("Enemy Counter Attack " + enemyCharacter.counter);
-		console.log("PLAYER HEALTH AFTER COUNTER " + userCharacter.health);
+	var enemyCharacterChoice = 0;
+	var futureEnemies;
 
-		userCharacter.attack += userCharacter.power;
+	$("body").on("click", ".evil", function() {
+		if (enemyCharacterChoice === 0) {
+			console.log("You clicked");
+			defenderId = $(this).attr("id");
+			$(this).addClass("currentDefender");
+			var currentEnemy = $(this).detach();
+			futureEnemies = $(".evil").detach();
+			// Move the characters to chooseCharacters div
+			$("#yourPlayer").append(player);
+			$("#enemy").append(currentEnemy);
+			$("#instructions").html("Click Fire to Engage");
+			$("#attackButton").css("visibility", "visible");
+			$("#yourPlayer").show();
+			enemyCharacterChoice++;
+			
 
-		if (userCharacter.health > 0) {
-			$(".selected>h4").html(userCharacter.health + " HP");
-		} else {
-			$(".selected>h4").text("DEFEATED");
-			$("#attack").addClass("disabled");
+			enemyCharacter = "";
+			var aId = $(this).attr("id");
+			userHealth = $(this).attr("hp");
+			enemyCharacter = playableCharacters[aId];
+			// console.log(enemyCharacter.attack);
+			// $(char).off("click.player");
+			// $("#selectable").off("click.player");	
 		}
-		if (enemyCharacter.health > 0) {
-			$(".enemy>h4").html(enemyCharacter.health + " HP");
-		} else {
-			$(".enemy>h4").text("DEFEATED");
-			$("#attack").addClass("disabled");
+	});
+	
+
+	// $(".selectable").unbind("click").bind("click", function() {
+	// 	selectCharacters(this);
+	// 	$(this).unbind("click");
+	// })
+
+	var wins = 0;
+	var attackCounter;
+
+	$("body").on("click", "#attackButton", function() {
+		if (enemyCharacterChoice === 1) {
+			console.log(playableCharacters[playerId].health);
+			playableCharacters[playerId].health = playableCharacters[playerId].health - playableCharacters[defenderId].counter;
+			playableCharacters[defenderId].health = playableCharacters[defenderId].health - playableCharacters[playerId].attack;
+			console.log(playableCharacters[playerId].health);
+
+		 	if (playableCharacters[playerId].health > 0) {
+		 		$(".good>h4").html(playableCharacters[playerId].health + " HP");
+		 	} else {
+		 		playableCharacters[playerId].health = 0;
+		 		$(".good>h4").html(playableCharacters[playerId].health + " HP");
+		 		$("#attackButton").css("visibility", "hidden");
+		 	}
+
+		 	if (playableCharacters[defenderId].health > 0) {
+		 		$(".evil>h4").html(playableCharacters[defenderId].health + " HP");
+		 	} else {
+		 		playableCharacters[defenderId].health = 0;
+		 		$(".evil>h4").html(playableCharacters[defenderId].health + " HP");
+		 		$("#attackButton").css("visibility", "hidden");
+		 	}
+
+		 	$("#message").html("You attacked for " + playableCharacters[playerId].attack + " damage.<br>");
+			$("#message").append(playableCharacters[defenderId].name + " attacked for " + playableCharacters[defenderId].counter + " damage.");
+			playableCharacters[playerId].attack = playableCharacters[playerId].attack + 10;
+
+			checkIfPlayerLost();
+			checkIfPlayerWon();
 		}
-		$("#message").html("You attacked for " + userCharacter.attack + " damage.<br>");
-		$("#message").append(enemyCharacter.name + " attacked for " + enemyCharacter.counter + " damage.");
-		
-		
 	})
 
 
